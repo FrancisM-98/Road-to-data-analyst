@@ -1,0 +1,3 @@
+# Requirements for Final project
+# Add your dependencies here, e.g., streamlit==1.28.1
+# Currently, no external packages are used in Jeu de con.py (only standard library 'random')

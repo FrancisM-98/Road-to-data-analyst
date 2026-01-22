@@ -7,4 +7,3 @@ theme_choisi = random.choice(themes)
 print(f"Thème attribué : {theme_choisi}, Note attribuée : {note}")
 print("Faites deviner le thème attribué en donnant un mot du thème qui correspondrait le mieux à la note attribuée.")
 
-
