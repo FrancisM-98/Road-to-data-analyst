@@ -7,4 +7,4 @@ images = [ ]
 for filename in filenames:
     images.append(iio.imread(filename))
 
-iio.imwrite('team-pic.gif', images, duration=500, loop=0)
+iio.imwrite('Python/Codedex/Final_project/Images/team-pic.gif', images, duration=500, loop=0)
