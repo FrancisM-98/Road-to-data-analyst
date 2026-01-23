@@ -16,7 +16,8 @@ st.set_page_config(
 THEMES = [
     "films", "animaux", "pays", "nourriture", "sports", 
     "musique", "histoire", "science", "technologie", "art", 
-    "littérature", "artistes", "jeux vidéo", "célébrités", "marques"
+    "littérature", "artistes", "jeux vidéo", "célébrités", "marques", 
+    "boissons"
 ]
 
 # Custom CSS
