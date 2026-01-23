@@ -16,6 +16,7 @@ def play():
 st.title("Devine la note du thème !")
 st.write("Bienvenue dans le jeu Devine la note du thème !")
 st.write("L'objectif est de deviner la note attribuée à un thème donné en proposant des mots associés à ce thème.")
+st.write("Par exemple, si le thème est artiste et la note est 10, vous pouvez proposer J.Cole. Et le participant adverse va deviner que la note est de 10 car J.Cole est un GOAT."  )
 st.write("Cliquez sur 'Play' pour commencer une nouvelle partie.")
 
 # Initialize game started flag
