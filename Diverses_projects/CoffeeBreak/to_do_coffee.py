@@ -1,6 +1,8 @@
 import streamlit as st
 from datetime import datetime, timedelta
 import time
+import base64
+import os
 
 # Page configuration
 st.set_page_config(page_title="☕ Coffee Break To-Do List", page_icon="☕", layout="wide")
@@ -22,6 +24,9 @@ if 'time_bonus_minutes' not in st.session_state:
 
 if 'coffees_today' not in st.session_state:
     st.session_state.coffees_today = 1  # First coffee at 8:15
+
+if 'task_id_counter' not in st.session_state:
+    st.session_state.task_id_counter = 0
 
 # Task difficulty settings
 TASK_CATEGORIES = {
@@ -51,8 +56,9 @@ def take_coffee_break():
 
 def add_task(task_name, category):
     """Add a new task to the list"""
+    st.session_state.task_id_counter += 1
     task = {
-        'id': len(st.session_state.tasks) + len(st.session_state.completed_tasks),
+        'id': st.session_state.task_id_counter,
         'name': task_name,
         'category': TASK_CATEGORIES[category]['difficulty'],
         'time_bonus': TASK_CATEGORIES[category]['time_bonus'],
@@ -77,80 +83,88 @@ def reset_day():
     st.session_state.tasks = []
     st.session_state.completed_tasks = []
     st.session_state.time_bonus_minutes = 0
+    st.session_state.task_id_counter = 0
     today = datetime.now().replace(hour=8, minute=15, second=0, microsecond=0)
     st.session_state.last_coffee_time = today
     st.session_state.coffees_today = 1
 
-def generate_coffee_mug_svg(minutes_remaining):
-    """Generate an SVG coffee mug that fills based on time remaining"""
+@st.cache_data
+def get_image_base64(filename):
+    """Load image from assets folder and return base64 encoded string (cached)"""
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    filepath = os.path.join(script_dir, 'assets', filename)
+    try:
+        with open(filepath, 'rb') as f:
+            return base64.b64encode(f.read()).decode('utf-8')
+    except FileNotFoundError:
+        return ""
+
+def generate_coffee_mug_html(minutes_remaining):
+    """Generate HTML/CSS coffee mug that fills based on time remaining"""
     # Calculate fill percentage (0% at 120 min, 100% at 0 min)
     fill_percentage = max(0, min(100, (120 - minutes_remaining) / 120 * 100))
     
-    # Mug dimensions
-    mug_height = 100
-    mug_width = 80
-    coffee_max_height = 75
+    # Calibrate to visual range (60% to 90% of image height)
+    min_height = 60
+    max_height = 90
+    visual_height = min_height + ((fill_percentage / 100) * (max_height - min_height))
     
-    # Calculate coffee fill height
-    coffee_height = (fill_percentage / 100) * coffee_max_height
-    coffee_y = 20 + (coffee_max_height - coffee_height)
+    # Load mug images
+    img_empty = get_image_base64('mug_empty.png')
+    img_full = get_image_base64('mug_full.png')
     
-    # Color gradient based on fill (lighter when empty, darker when full)
-    coffee_lightness = 70 - (fill_percentage / 100 * 40)  # 70% to 30%
-    coffee_color = f"hsl(25, 80%, {coffee_lightness}%)"
-    
-    # Steam animation when ready
-    steam_opacity = 0.8 if minutes_remaining <= 0 else 0
-    
-    svg = f"""
-    <svg width="120" height="140" viewBox="0 0 120 140" xmlns="http://www.w3.org/2000/svg">
-        <!-- Steam (when ready) -->
-        <g opacity="{steam_opacity}">
-            <path d="M 35 10 Q 30 5, 35 0" stroke="#aaa" stroke-width="2" fill="none" opacity="0.6">
-                <animate attributeName="d" 
-                    values="M 35 10 Q 30 5, 35 0;M 35 10 Q 40 5, 35 0;M 35 10 Q 30 5, 35 0" 
-                    dur="2s" repeatCount="indefinite"/>
-            </path>
-            <path d="M 50 15 Q 45 8, 50 2" stroke="#aaa" stroke-width="2" fill="none" opacity="0.5">
-                <animate attributeName="d" 
-                    values="M 50 15 Q 45 8, 50 2;M 50 15 Q 55 8, 50 2;M 50 15 Q 45 8, 50 2" 
-                    dur="2.5s" repeatCount="indefinite"/>
-            </path>
-            <path d="M 65 10 Q 60 5, 65 0" stroke="#aaa" stroke-width="2" fill="none" opacity="0.6">
-                <animate attributeName="d" 
-                    values="M 65 10 Q 60 5, 65 0;M 65 10 Q 70 5, 65 0;M 65 10 Q 60 5, 65 0" 
-                    dur="1.8s" repeatCount="indefinite"/>
-            </path>
-        </g>
-        
-        <!-- Mug body outline -->
-        <rect x="20" y="20" width="{mug_width}" height="{mug_height}" 
-              fill="#f5f5f5" stroke="#8B4513" stroke-width="3" rx="5"/>
-        
-        <!-- Coffee fill -->
-        <rect x="23" y="{coffee_y}" width="{mug_width - 6}" height="{coffee_height}" 
-              fill="{coffee_color}" rx="3">
-            <animate attributeName="height" 
-                from="{max(0, coffee_height - 2)}" 
-                to="{coffee_height}" 
-                dur="1s" 
-                repeatCount="1"/>
-        </rect>
-        
-        <!-- Mug handle -->
-        <path d="M 100 40 Q 115 50, 115 70 Q 115 90, 100 100" 
-              stroke="#8B4513" stroke-width="3" fill="none"/>
-        
-        <!-- Shine effect on mug -->
-        <ellipse cx="35" cy="35" rx="8" ry="12" fill="white" opacity="0.3"/>
-        
-        <!-- Fill percentage text -->
-        <text x="60" y="135" text-anchor="middle" font-size="14" font-weight="bold" fill="#666">
-            {int(fill_percentage)}%
-        </text>
-    </svg>
+    html = f"""
+    <style>
+        .mug-container {{
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+        }}
+        .mug-base {{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            z-index: 1;
+        }}
+        .fill-container {{
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: {visual_height}%;
+            overflow: hidden;
+            z-index: 2;
+            transition: height 0.5s ease;
+        }}
+        .mug-full {{
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+        }}
+        .fill-text {{
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: #666;
+            margin-top: 10px;
+        }}
+    </style>
+    <div class="mug-container">
+        <img src="data:image/png;base64,{img_empty}" class="mug-base">
+        <div class="fill-container">
+            <img src="data:image/png;base64,{img_full}" class="mug-full">
+        </div>
+    </div>
+    <div class="fill-text">{int(fill_percentage)}%</div>
     """
-    return svg
+    return html
 
 # Main UI
 st.title("☕ Coffee Break To-Do List")
@@ -165,13 +179,12 @@ with col1:
 with col2:
     st.metric("Coffees Today", f"☕ × {st.session_state.coffees_today}")
 
+# Calculate minutes left once (reused below)
+next_coffee = calculate_next_coffee_time()
+time_until_coffee = next_coffee - datetime.now()
+minutes_left = max(0, int(time_until_coffee.total_seconds() / 60))
+
 with col3:
-    next_coffee = calculate_next_coffee_time()
-    time_until_coffee = next_coffee - datetime.now()
-    minutes_left = int(time_until_coffee.total_seconds() / 60)
-    if minutes_left < 0:
-        minutes_left = 0
-    
     if is_coffee_ready():
         st.success("☕ COFFEE BREAK READY!")
         if st.button("☕ Take Coffee Break", type="primary"):
@@ -185,15 +198,9 @@ st.markdown("---")
 col_left, col_center, col_right = st.columns([1, 1, 1])
 
 with col_center:
-    next_coffee = calculate_next_coffee_time()
-    time_until_coffee = next_coffee - datetime.now()
-    minutes_left = int(time_until_coffee.total_seconds() / 60)
-    if minutes_left < 0:
-        minutes_left = 0
-    
     # Generate and display the coffee mug
-    mug_svg = generate_coffee_mug_svg(minutes_left)
-    st.components.v1.html(mug_svg, height=160)
+    mug_html = generate_coffee_mug_html(minutes_left)
+    st.components.v1.html(mug_html, height=260)
     
     if is_coffee_ready():
         st.markdown("### 🔥 **HOT & READY!** 🔥")
@@ -308,5 +315,4 @@ with st.sidebar:
     Complete tasks to reduce your wait time for the next coffee break!
     """)
 
-# Auto-refresh every 30 seconds to update timers
-time.sleep(0.1)  # Small delay to prevent constant reloading
+# Note: For auto-refresh, consider using st.rerun() with a timer or st_autorefresh component
