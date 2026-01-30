@@ -1,4 +1,4 @@
-from models import Deck, Player, Card
+from models import Deck, Player, Card, Deal
 from typing import List, Optional
 
 class Flip7Game:
@@ -57,6 +57,8 @@ class Flip7Game:
                     return
                 
                 print(f"  Drew: {card}")
+                if not player.has_duplicate(card):
+                    print(f"  Current Hand: {player.hand + [card]}") # Preview hand including new card
                 
                 # Check Bust
                 if player.has_duplicate(card):
@@ -93,73 +95,147 @@ class Flip7Game:
             
             print("Invalid command.")
 
+    def suggest_trade_logic(self, active_player: Player, target_player: Player, busting_card: Optional[Card] = None) -> List[Deal]:
+        deals = []
+        
+        # 1. The Bailout (If Busting)
+        if busting_card:
+            deal = Deal(active_player, target_player)
+            deal.action_cancel_bust = True
+            deal.action_force_draw = 2 # Cost: Draw 2 more
+            deal.gives_cards = [busting_card] # Logic: you take this
+            deals.append(deal)
+            
+            # 2. Scrapyard (Self sacrifice)
+            deal2 = Deal(active_player, target_player) # Target doesn't matter much here but needed for structure
+            deal2.action_discard_highest = True
+            deal2.action_cancel_bust = True
+            deals.append(deal2)
+
+        # 3. The Forced March (Aggressive)
+        if not busting_card:
+            deal = Deal(active_player, target_player)
+            deal.action_force_hit = True
+            # Cost? Maybe give a good card?
+            if active_player.hand:
+                deal.gives_cards = [active_player.hand[0]] # Just first one for demo
+            deals.append(deal)
+
+        return deals
+
+    def execute_deal(self, deal: Deal):
+        print(f"\nExecuting Deal: {deal}")
+        
+        # Transfer Cards
+        for c in deal.gives_cards:
+            if c in deal.proposer.hand:
+                deal.proposer.hand.remove(c)
+                deal.target.add_card(c)
+                print(f"  -> Transferred {c} from {deal.proposer.name} to {deal.target.name}")
+        
+        for c in deal.receives_cards:
+            if c in deal.target.hand:
+                deal.target.hand.remove(c)
+                deal.proposer.add_card(c)
+                print(f"  -> Transferred {c} from {deal.target.name} to {deal.proposer.name}")
+
+        # Meta Actions
+        if deal.action_grant_second_life:
+            deal.target.second_life = True
+            print(f"  -> {deal.target.name} granted SECOND LIFE!")
+            
+        if deal.action_discard_highest:
+            # Find max card
+            nums = [c for c in deal.proposer.hand if c.card_type == 'number']
+            if nums:
+                max_card = max(nums, key=lambda x: x.value)
+                deal.proposer.hand.remove(max_card)
+                print(f"  -> {deal.proposer.name} sacrificed {max_card} to the Scrap Yard!")
+
+        if deal.action_force_hit:
+            print(f"  -> {deal.target.name} is FORCED TO HIT next turn!")
+            # Logic needs to be handled in play_turn loop via a flag on player?
+            # For prototype, we just print it. Real impl needs state.
+
+        if deal.action_force_draw > 0:
+            print(f"  -> {deal.proposer.name} must draw {deal.action_force_draw} extra cards!")
+            for _ in range(deal.action_force_draw):
+                c = self.deck.draw()
+                if c:
+                    print(f"    Forced Draw: {c}")
+                    if deal.proposer.has_duplicate(c):
+                        print("    ...and they BUSTED on the forced draw!")
+                        return False # Failed execution essentially, or just bust logic takes over
+                    deal.proposer.add_card(c)
+
+        if deal.action_cancel_bust:
+            print("  -> Bust Cancelled! Player stays alive.")
+            return True # Signal success
+
+        return True
+
     def initiate_negotiation(self, active_player: Player):
         print("\n--- NEGOTIATION TABLE ---")
-        # List other players
         targets = [p for p in self.players if p != active_player]
-        if not targets:
-            print("No one to trade with!")
-            return
+        if not targets: return
 
         for i, p in enumerate(targets):
             print(f"{i+1}. {p.name} (Hand: {p.hand})")
         
         try:
-            choice = int(input("Select partner (number) or 0 to cancel: "))
+            choice = int(input("Select partner (number) or 0: "))
             if choice == 0: return
             target = targets[choice-1]
-        except:
-            return
+        except: return
 
-        print(f"Talking to {target.name}...")
-        # Very simple trade logic for v1
-        # "Give card X to target"
+        # ADVISOR
+        print("\n[A]dvisor Suggestions:")
+        deals = self.suggest_trade_logic(active_player, target)
+        for i, d in enumerate(deals):
+            print(f"{i+1}. {d}")
+        
+        print(f"{len(deals)+1}. Custom Trade (Not impl yet)")
+        
         try:
-            val_to_give = int(input(f"Value of card to GIVE to {target.name} (0 for none): "))
-            
-            # Verify possession
-            card_to_give = None
-            if val_to_give > 0:
-                card_to_give = active_player.remove_card_by_value(val_to_give)
-                if not card_to_give:
-                    print("You don't have that card.")
-                    return
-
-            if card_to_give:
-                target.add_card(card_to_give)
-                print(f"Deal done! Gave {card_to_give} to {target.name}.")
-            else:
-                print("Negotiation cancelled.")
-        except ValueError:
-            print("Invalid input")
-
+            d_choice = int(input("Choose deal to offer: "))
+            if 1 <= d_choice <= len(deals):
+                offer = deals[d_choice-1]
+                # Ask Target
+                agree = input(f"{target.name}, do you accept? [y/n] ")
+                if agree.lower() == 'y':
+                    self.execute_deal(offer)
+        except: pass
 
     def resolve_bust_negotiation(self, player: Player, busting_card: Card) -> bool:
-        """
-        Returns True if player was saved (gave card away), False if they Bust.
-        """
-        print(f"\n!!! SOS NEGOTIATION !!!")
-        print(f"You drew a {busting_card}. You already have one.")
-        print("Does anyone want this card? (Negotiate!)")
+        print(f"\n!!! SOS: BUSTING with {busting_card} !!!")
         
-        # Ask other players if they want it
-        start_idx = self.players.index(player)
-        # Iterate through others
-        others = self.players[start_idx+1:] + self.players[:start_idx]
-        
-        for p in others:
-            if not p.is_active: continue
+        # Auto-call advisor for ALL targets
+        possible_deals = []
+        for p in self.players:
+            if p == player or not p.is_active: continue
+            possible_deals.extend(self.suggest_trade_logic(player, p, busting_card))
             
-            # Check if they can even take it (don't want to bust them usually, but maybe they want it?)
-            if p.has_duplicate(busting_card):
-                print(f"{p.name} surely doesn't want it (has {busting_card.value}).")
-                continue
-                
-            choice = input(f"{p.name}, do you want the {busting_card.value} from {player.name}? [y/n] ")
-            if choice.lower() == 'y':
-                p.add_card(busting_card)
-                print(f"{p.name} accepted the card! {player.name} is SAFE.")
-                return True
+        if not possible_deals:
+            print("Advisor has no ideas. You are doomed.")
+            return False
+            
+        for i, d in enumerate(possible_deals):
+            print(f"{i+1}. {d}")
+            
+        try:
+            sel = int(input("Select SOS Deal (0 to die): "))
+            if sel == 0: return False
+            chosen_deal = possible_deals[sel-1]
+            
+            # Ask Target (unless self-sacrifice)
+            if chosen_deal.action_discard_highest:
+                # Self action, no approval needed? or maybe purely desperate
+                return self.execute_deal(chosen_deal)
+            else:
+                agree = input(f"{chosen_deal.target.name}, save {player.name}? [y/n] ")
+                if agree.lower() == 'y':
+                    return self.execute_deal(chosen_deal)
+        except: pass
         
-        print("No takers. :(")
         return False
+
