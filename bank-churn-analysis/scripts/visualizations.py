@@ -9,16 +9,18 @@ plt.rcParams['savefig.bbox'] = 'tight'
 
 # Load Data
 try:
-    df = pd.read_csv('Final_Portfolio_Dataset_v2.csv')
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    data_path = os.path.join(script_dir, '..', 'data', 'Final_Portfolio_Dataset_v2.csv')
+    df = pd.read_csv(data_path)
     print("Dataset loaded.")
 except FileNotFoundError:
-    print("Dataset not found.")
+    print("Dataset not found at " + data_path)
     exit()
 
 import os
 
 # Create output folder if it doesn't exist
-output_folder = 'visualizations'
+output_folder = os.path.join(script_dir, '..', 'visualizations')
 os.makedirs(output_folder, exist_ok=True)
 
 def save_plot(filename):

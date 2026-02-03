@@ -2,11 +2,16 @@ import pandas as pd
 from scipy.stats import ttest_ind
 
 # Load data
+import os
+script_dir = os.path.dirname(os.path.abspath(__file__))
+
 try:
-    df = pd.read_csv('Final_Portfolio_Dataset_v2.csv')
+    data_path = os.path.join(script_dir, '..', 'data', 'Final_Portfolio_Dataset_v2.csv')
+    df = pd.read_csv(data_path)
 except FileNotFoundError:
     try:
-        df = pd.read_csv('Churn_Modelling.csv')
+        data_path = os.path.join(script_dir, '..', 'data', 'Churn_Modelling.csv')
+        df = pd.read_csv(data_path)
     except:
         print("Data not found.")
         exit()

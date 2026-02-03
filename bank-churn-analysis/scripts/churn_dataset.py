@@ -136,8 +136,10 @@ df.sort_values(by="Exited", inplace=True)
 print(df[['CustomerId', 'Balance', 'BalanceBr', 'EstimatedSalary', 'EstimatedSalaryBr', 'Exited']].head())
 
 # Block 10: Save to CSV
+import os
 # Saving the dataset with new features
-output_file = "Final_Portfolio_Dataset_v2.csv"
+script_dir = os.path.dirname(os.path.abspath(__file__))
+output_file = os.path.join(script_dir, '..', 'data', "Final_Portfolio_Dataset_v2.csv")
 df.to_csv(output_file, index=False)
 print(f"\nSaved modified dataset to {output_file}")
 

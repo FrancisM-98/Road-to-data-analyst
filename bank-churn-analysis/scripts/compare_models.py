@@ -1,12 +1,17 @@
 import pandas as pd
 
 # Load dataset (using the one with brackets as base)
+import os
+script_dir = os.path.dirname(os.path.abspath(__file__))
+
 try:
-    df = pd.read_csv('Churn_Modelling_With_Brackets.csv')
+    data_path = os.path.join(script_dir, '..', 'data', 'Churn_Modelling_With_Brackets.csv')
+    df = pd.read_csv(data_path)
 except FileNotFoundError:
     # Fallback if that doesn't exist (though it should)
     try:
-        df = pd.read_csv('Churn_Modelling.csv') 
+        data_path = os.path.join(script_dir, '..', 'data', 'Churn_Modelling.csv')
+        df = pd.read_csv(data_path) 
     except:
         print("Reference datasets not found.")
         exit()
