@@ -2,7 +2,7 @@
 
 **Date:** 2026-02-03
 **Subject:** Targeted Retention Strategies for "Danger Score 4" Segment
-**Context:** Analysis identifies a critical churn risk (85% probability) among customers who are **German, 45+ years old, and hold only a single product**.
+**Context:** Analysis identifies a critical churn risk (85% probability) among customers who are **German, 45+ years old, and hold 1, 3, or 4 products**.
 
 The following interventions are strictly grounded in our dataset findings, replacing broad assumptions with targeted, measurable pilots.
 

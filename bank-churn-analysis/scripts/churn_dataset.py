@@ -97,8 +97,9 @@ def calculate_danger_score(row):
     # Factor 1: The German Anomaly
     if row['Geography'] == 'Germany':
         score += 1
-    # Factor 2: The Single Product Trap
-    if row['NumOfProducts'] == 1:
+    # Factor 2: Product Instability
+    # Churn is high for 1 product (lack of engagement) AND 3-4 products (system gaming/instability)
+    if row['NumOfProducts'] in [1, 3, 4]:
         score += 1
     # Factor 3: Inactivity
     if row['IsActiveMember'] == 0:

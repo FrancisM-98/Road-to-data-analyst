@@ -6,22 +6,31 @@ import os
 script_dir = os.path.dirname(os.path.abspath(__file__))
 notebook_path = os.path.join(script_dir, '..', 'Final_Churn_Report.ipynb')
 
-# The new content for the recommendations cell
+# The new content for the recommendations/conclusion cell
 new_content = [
-    "### 🏆 The \"Power Conclusion\"\n",
+    "### 🏆 Final Conclusion: Strategic Optimization & Business Case\n",
     "\n",
-    "#### 1. The Verdict (The Big Win)\n",
-    "This analysis successfully moved from a generalized churn observation to a high-precision predictive model. By identifying the **'German-Age-Product'** intersection, we have narrowed the bank's focus from 10,000 noise-filled records to a high-priority **'Hit List' of 238 customers** with a **85.29% likelihood of exit**.\n",
+    "#### 1. The Verdict: From Noise to Signal\n",
+    "This project successfully transitioned from a global observation of 20.4% churn to a high-precision predictive model. Through iterative testing, we isolated a specific **\"High-Risk Intersection\"**—German customers, aged 45+, who fall outside the established \"Product Sweet Spot.\"\n",
     "\n",
-    "#### 2. The Financial Stakes (The ROI)\n",
-    "These 238 customers represent more than just a count; they are a significant revenue risk. With an average balance of **$91,000** in this segment, the bank is looking at approximately **$21.6 Million** in potential outflows. Saving even 20% of this group would retain over **$4 Million** in assets.\n",
+    "**The Result:** A high-priority **'Hit List' of 271 customers** with a **87.08% likelihood of exit**.\n",
     "\n",
-    "#### 3. The Action Mandate (The 'Plays')\n",
-    "To mitigate this risk, we recommend three immediate data-driven interventions:\n",
+    "#### 2. The Discovery: The \"Product Paradox\" (U-Curve Theory)\n",
+    "The most significant technical breakthrough in this analysis was the rejection of the \"More is Better\" product hypothesis.\n",
     "\n",
-    "*   **The Ecosystem Entry:** Transitioning 'Single-Product' users into multi-product accounts to increase switching costs.\n",
-    "*   **The Regional Pilot:** A 90-day retention experiment in the DACH region to address localized friction.\n",
-    "*   **The Wealth Shield:** Implementing tenure-based interest rate protections for the 45+ demographic to capture aging capital."
+    "*   **Initial Assumption:** Increasing product count linearly increases loyalty.\n",
+    "*   **The Reality:** Exploratory Data Analysis (EDA) revealed a **U-shaped risk curve**.\n",
+    "    *   **The Sweet Spot:** Customers with **exactly 2 products** are the most loyal segment (lowest churn).\n",
+    "    *   **The Danger Zones:** Both **\"Low Engagement\" (1 product)** and **\"Product Saturation\" (3-4 products)** lead to extreme churn rates (reaching 100% in the 4-product segment).\n",
+    "\n",
+    "By optimizing the Danger Score to flag any customer **outside the 2-product \"Safety Zone,\"** we increased model precision by over 2%, capturing the bank's most dissatisfied \"Power Users.\"\n",
+    "\n",
+    "#### 3. The Financial Stakes (ROI of Retention)\n",
+    "These 271 customers represent the bank's most significant capital flight risk:\n",
+    "\n",
+    "*   **Segment Average Balance:** ~$120,000\n",
+    "*   **Total Assets at Risk:** $32.7 Million\n",
+    "*   **Projected Savings:** By applying the recommended strategic plays (Ecosystem Entry, Regional Pilot, and Wealth Shield), a conservative **20% retention rate** would protect **$6.5 Million** in assets that are otherwise statistically certain to leave."
 ]
 
 try:
@@ -32,21 +41,31 @@ try:
     found = False
     for cell in notebook['cells']:
         if cell['cell_type'] == 'markdown':
-            # Check if this is the summary/recommendations cell
             source_text = "".join(cell['source'])
-            # We look for the previous header we set or the original one
-            if "### Recommendations" in source_text or "### Conclusions" in source_text or "### Summary" in source_text:
-                # Replace the content
+            
+            # 1. Update the Recommendations/Conclusion
+            # We look for any of the previous headers to identify the correct cell
+            if "### Recommendations" in source_text or "### Conclusions" in source_text or "### Summary" in source_text or "Power Conclusion" in source_text or "Final Conclusion" in source_text:
                 cell['source'] = new_content
                 found = True
-                break
+            
+            # 2. Update the Danger Score Definition Table (New Logic)
+            if "| **Single Product Trap** |" in source_text:
+                new_source = []
+                for line in cell['source']:
+                    if "| **Single Product Trap** |" in line:
+                        new_source.append("| **Product Instability** | Customer has 1, 3, or 4 bank products |\n")
+                    else:
+                        new_source.append(line)
+                cell['source'] = new_source
+                print("Updated Danger Score Definition Table.")
     
     if found:
         with open(notebook_path, 'w', encoding='utf-8') as f:
             json.dump(notebook, f, indent=1)
         print("Successfully updated notebook recommendations.")
     else:
-        print("Could not find the Recommendations/Summary cell to update.")
+        print("Could not find the Recommendations/Summary/Conclusion cell to update.")
 
 except Exception as e:
     print(f"Error updating notebook: {e}")

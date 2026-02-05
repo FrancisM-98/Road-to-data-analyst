@@ -33,7 +33,7 @@ def is_relative_low_balance(row):
 # Factor 4: Relative Low Balance
 criteria_mask = (
     (df['Geography'] == 'Germany') &
-    (df['NumOfProducts'] == 1) &
+    (df['NumOfProducts'].isin([1, 3, 4])) &
     (df['IsActiveMember'] == 0) &
     (df.apply(is_relative_low_balance, axis=1)) 
 )
