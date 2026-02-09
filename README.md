@@ -10,7 +10,7 @@ Currently seeking opportunities in Geneva.
 
 ## 📊 Featured Projects
 
-### 🏦 [Bank Customer Churn Analysis](.https://github.com/FrancisM-98/Bank-Customer-Churn-Analysis/tree/543c0732937db693fa30a82b032ec4bd7252b466)
+### 🏦 [Bank Customer Churn Analysis](https://github.com/FrancisM-98/Bank-Customer-Churn-Analysis/tree/543c0732937db693fa30a82b032ec4bd7252b466)
 **Identified $32.65M in at-risk assets** using custom risk scoring model.
 
 - Built predictive framework with **87.08% precision** for high-risk customers
