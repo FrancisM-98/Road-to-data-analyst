@@ -1,8 +1,0 @@
-                   Exited (Count)  ...  Exit Rate
-EstimatedSalaryBr                  ...           
-High                          517  ...   0.202348
-Low                           489  ...   0.199348
-Medium                        504  ...   0.198660
-Very High                     527  ...   0.214664
-
-[4 rows x 3 columns]

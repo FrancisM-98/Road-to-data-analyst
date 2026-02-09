@@ -10,7 +10,7 @@ plt.rcParams['savefig.bbox'] = 'tight'
 # Load Data
 try:
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    data_path = os.path.join(script_dir, '..', 'data', 'Final_Portfolio_Dataset_v2.csv')
+    data_path = os.path.join(script_dir, '..', 'data', 'Final_Portfolio_Dataset.csv')
     df = pd.read_csv(data_path)
     print("Dataset loaded.")
 except FileNotFoundError:

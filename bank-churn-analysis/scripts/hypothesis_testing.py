@@ -6,11 +6,11 @@ import os
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 try:
-    data_path = os.path.join(script_dir, '..', 'data', 'Final_Portfolio_Dataset_v2.csv')
+    data_path = os.path.join(script_dir, '..', 'data', 'Final_Portfolio_Dataset.csv')
     df = pd.read_csv(data_path)
     print("Dataset loaded successfully.")
 except FileNotFoundError:
-    print("Error: Dataset not found. Please ensure 'Final_Portfolio_Dataset_v2.csv' exists.")
+    print("Error: Dataset not found. Please ensure 'Final_Portfolio_Dataset.csv' exists.")
     exit()
 
 def report_chi2(feature, target='Exited'):
