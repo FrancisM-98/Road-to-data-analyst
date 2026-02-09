@@ -1,7 +1,7 @@
 # Francis Multani - Data Analyst Portfolio
 
 **Junior Data Analyst** specializing in Python, SQL, and Power BI.  
-Currently seeking opportunities in Geneva/Zurich area.
+Currently seeking opportunities in Geneva.
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/francis-multani/)
 [![Email](https://img.shields.io/badge/Email-Contact-red?style=flat&logo=gmail)](mailto:multanifrancis@gmail.com)
