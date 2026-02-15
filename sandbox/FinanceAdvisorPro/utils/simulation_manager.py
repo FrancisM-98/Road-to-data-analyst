@@ -1,17 +1,33 @@
 """
 Composant réutilisable pour la sauvegarde et le chargement des simulations.
 Fournit un panneau save/load/history intégrable dans chaque page de simulation.
+Intègre aussi l'export PDF et l'envoi par email.
 """
 
 import streamlit as st
 from datetime import datetime
 from utils.database import save_simulation, get_simulations, delete_simulation
 from utils.auth import get_current_user
+from utils.pdf_export import (
+    export_budget_pdf,
+    export_fiscalite_pdf,
+    export_prevoyance_pdf,
+    export_investissements_pdf,
+)
+from utils.email_sender import email_send_section
+
+# Map module name → export function
+_EXPORT_MAP = {
+    "budget": ("Budget", export_budget_pdf),
+    "fiscalite": ("Fiscalité", export_fiscalite_pdf),
+    "prevoyance": ("Prévoyance", export_prevoyance_pdf),
+    "investissements": ("Investissements", export_investissements_pdf),
+}
 
 
 def simulation_save_section(module: str, parametres: dict, resultats: dict):
     """
-    Affiche la section de sauvegarde et historique des simulations.
+    Affiche la section de sauvegarde, historique, export PDF et email.
     
     Args:
         module: Nom du module (budget, fiscalite, prevoyance, investissements)
@@ -26,13 +42,14 @@ def simulation_save_section(module: str, parametres: dict, resultats: dict):
 
     client_id = client["id"]
     advisor_id = user["username"]
+    advisor_name = user.get("name", advisor_id)
     nom_client = f"{client.get('prenom', '')} {client.get('nom', '')}".strip()
 
     st.markdown("---")
-    st.markdown("### 💾 Sauvegarder & Historique")
+    st.markdown("### Sauvegarder & Exporter")
 
-    # ─── Save section ────────────────────────────────────────
-    col_name, col_save = st.columns([3, 1])
+    # Save + PDF row 
+    col_name, col_save, col_pdf = st.columns([3, 1, 1])
     with col_name:
         default_name = f"{module.capitalize()} — {datetime.now().strftime('%d/%m/%Y %H:%M')}"
         sim_name = st.text_input(
@@ -43,7 +60,7 @@ def simulation_save_section(module: str, parametres: dict, resultats: dict):
             placeholder="Nom de la simulation...",
         )
     with col_save:
-        if st.button("💾 Sauvegarder", key=f"save_sim_{module}", use_container_width=True):
+        if st.button(" Sauvegarder", key=f"save_sim_{module}", use_container_width=True):
             sim_id = save_simulation(
                 client_id=client_id,
                 advisor_id=advisor_id,
@@ -52,14 +69,45 @@ def simulation_save_section(module: str, parametres: dict, resultats: dict):
                 parametres=parametres,
                 resultats=resultats,
             )
-            st.success(f"✅ Simulation sauvegardée (v{_get_latest_version(client_id, module)})")
+            st.success(f" Simulation sauvegardée (v{_get_latest_version(client_id, module)})")
             st.rerun()
 
-    # ─── History section ─────────────────────────────────────
+    # PDF Export 
+    with col_pdf:
+        module_label, export_fn = _EXPORT_MAP.get(module, ("Rapport", None))
+        if export_fn:
+            pdf_bytes = export_fn(
+                advisor_name=advisor_name,
+                client_name=nom_client,
+                params=parametres,
+                results=resultats,
+            )
+            filename = f"Rapport_{module_label}_{nom_client}_{datetime.now().strftime('%Y%m%d')}.pdf"
+            filename = filename.replace(" ", "_")
+            st.download_button(
+                label=" PDF",
+                data=bytes(pdf_bytes),
+                file_name=filename,
+                mime="application/pdf",
+                key=f"pdf_{module}",
+                use_container_width=True,
+            )
+
+    # Email section 
+    if export_fn:
+        pdf_bytes = export_fn(
+            advisor_name=advisor_name,
+            client_name=nom_client,
+            params=parametres,
+            results=resultats,
+        )
+        email_send_section(module_label, pdf_bytes, client, advisor_name)
+
+    # History section 
     simulations = get_simulations(client_id, module=module)
 
     if simulations:
-        with st.expander(f"📋 Historique ({len(simulations)} version{'s' if len(simulations) > 1 else ''})", expanded=False):
+        with st.expander(f" Historique ({len(simulations)} version{'s' if len(simulations) > 1 else ''})", expanded=False):
             for sim in simulations:
                 _render_simulation_card(sim, module)
     else:
@@ -105,11 +153,11 @@ def _render_simulation_card(sim: dict, module: str):
         )
 
     with col_load:
-        if st.button("📂 Charger", key=f"load_{sim['id']}", use_container_width=True):
+        if st.button(" Charger", key=f"load_{sim['id']}", use_container_width=True):
             _load_simulation(sim, module)
 
     with col_delete:
-        if st.button("🗑️", key=f"del_{sim['id']}", use_container_width=True):
+        if st.button("", key=f"del_{sim['id']}", use_container_width=True):
             delete_simulation(sim["id"])
             st.success("Simulation supprimée.")
             st.rerun()
@@ -124,7 +172,7 @@ def _load_simulation(sim: dict, module: str):
     st.session_state[f"loaded_sim_name_{module}"] = sim.get("nom", "")
     st.session_state[f"loaded_sim_version_{module}"] = sim.get("version", "?")
 
-    st.info(f"📂 Simulation **v{sim.get('version', '?')}** chargée — les paramètres sont restaurés.")
+    st.info(f" Simulation **v{sim.get('version', '?')}** chargée — les paramètres sont restaurés.")
     st.rerun()
 
 
@@ -151,7 +199,7 @@ def get_loaded_params(module: str) -> dict | None:
                 font-size: 0.9rem;
                 color: #00D4AA;
             ">
-                📂 Simulation chargée : <b>v{version}</b> — {name}
+                Simulation chargée : <b>v{version}</b> — {name}
             </div>
             """,
             unsafe_allow_html=True,

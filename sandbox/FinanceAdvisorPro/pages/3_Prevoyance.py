@@ -1,5 +1,5 @@
 """
-🔒 Module Prévoyance — Les 3 piliers suisses
+Module Prévoyance — Les 3 piliers suisses
 """
 
 import streamlit as st
@@ -36,18 +36,18 @@ require_auth()
 sidebar_user_info()
 init_db()
 
-# ─── Client context ──────────────────────────────────────────
+# Client context 
 client = st.session_state.get("current_client")
 default_age = client.get("age", 35) if client else 35
 default_salaire = int(client.get("salaire_annuel", 85_000)) if client else 85_000
 default_lpp = int(client.get("capital_lpp", 50_000)) if client else 50_000
 default_3a = int(client.get("capital_3a", 15_000)) if client else 15_000
 
-# ─── Titre ───────────────────────────────────────────────────
+# Titre 
 st.markdown(
     """
     <div class="animate-in">
-        <div class="premium-title">🔒 Prévoyance Retraite</div>
+        <div class="premium-title"> Prévoyance Retraite</div>
         <div class="premium-subtitle">Planifiez votre retraite avec les 3 piliers du système suisse</div>
     </div>
     """,
@@ -56,8 +56,8 @@ st.markdown(
 
 client_banner()
 
-# ─── Paramètres globaux ─────────────────────────────────────
-st.markdown("### 📋 Votre profil")
+# Paramètres globaux 
+st.markdown("### Votre profil")
 
 col1, col2, col3, col4 = st.columns(4)
 with col1:
@@ -71,18 +71,18 @@ with col4:
 
 annees_restantes = max(0, age_retraite - age)
 
-# ─── Tabs des 3 piliers ─────────────────────────────────────
+# Tabs des 3 piliers 
 st.markdown("---")
 tab1, tab2, tab3, tab4 = st.tabs([
-    "🏛️ 1er Pilier (AVS)",
-    "🏦 2ème Pilier (LPP)",
-    "💰 3ème Pilier (3a/3b)",
-    "📊 Vue Globale",
+    " 1er Pilier (AVS)",
+    " 2ème Pilier (LPP)",
+    " 3ème Pilier (3a/3b)",
+    " Vue Globale",
 ])
 
-# ─── 1er Pilier ─────────────────────────────────────────────
+# 1er Pilier 
 with tab1:
-    st.markdown("### 🏛️ AVS — Assurance vieillesse et survivants")
+    st.markdown("### AVS — Assurance vieillesse et survivants")
     st.markdown(
         """
         <div class="section-card">
@@ -101,7 +101,6 @@ with tab1:
         st.markdown(
             f"""
             <div class="kpi-card">
-                <div class="kpi-emoji">🏛️</div>
                 <div class="kpi-value">CHF {avs['rente_mensuelle']:,.0f}</div>
                 <div class="kpi-label">Rente AVS / mois</div>
             </div>
@@ -112,7 +111,6 @@ with tab1:
         st.markdown(
             f"""
             <div class="kpi-card">
-                <div class="kpi-emoji">📅</div>
                 <div class="kpi-value">CHF {avs['rente_annuelle']:,.0f}</div>
                 <div class="kpi-label">Rente AVS / an</div>
             </div>
@@ -124,7 +122,6 @@ with tab1:
         st.markdown(
             f"""
             <div class="kpi-card">
-                <div class="kpi-emoji">📊</div>
                 <div class="kpi-value">{pct_complet}%</div>
                 <div class="kpi-label">Échelle de cotisation</div>
             </div>
@@ -136,7 +133,7 @@ with tab1:
         st.markdown(
             f"""
             <div class="suggestion-moyenne">
-                <b>⚠️ {avs['annees_manquantes']} années de cotisation manquantes</b><br>
+                <b> {avs['annees_manquantes']} années de cotisation manquantes</b><br>
                 <span style="color: #A0A3B1;">Des lacunes dans vos cotisations AVS réduisent votre rente.
                 Vous pouvez racheter les 5 dernières années manquantes auprès de la caisse de compensation.</span>
             </div>
@@ -173,9 +170,9 @@ with tab1:
     )
     st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
 
-# ─── 2ème Pilier ─────────────────────────────────────────────
+# 2ème Pilier 
 with tab2:
-    st.markdown("### 🏦 LPP — Prévoyance professionnelle")
+    st.markdown("### LPP — Prévoyance professionnelle")
     st.markdown(
         """
         <div class="section-card">
@@ -200,7 +197,6 @@ with tab2:
         st.markdown(
             f"""
             <div class="kpi-card">
-                <div class="kpi-emoji">🏦</div>
                 <div class="kpi-value">CHF {lpp['capital_projete']:,.0f}</div>
                 <div class="kpi-label">Capital projeté à {age_retraite} ans</div>
             </div>
@@ -211,7 +207,6 @@ with tab2:
         st.markdown(
             f"""
             <div class="kpi-card">
-                <div class="kpi-emoji">📅</div>
                 <div class="kpi-value">CHF {lpp['rente_mensuelle']:,.0f}</div>
                 <div class="kpi-label">Rente LPP / mois</div>
             </div>
@@ -222,7 +217,6 @@ with tab2:
         st.markdown(
             f"""
             <div class="kpi-card">
-                <div class="kpi-emoji">💼</div>
                 <div class="kpi-value">CHF {lpp.get('salaire_coordonne', 0):,.0f}</div>
                 <div class="kpi-label">Salaire coordonné</div>
             </div>
@@ -255,9 +249,9 @@ with tab2:
         )
         st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
 
-# ─── 3ème Pilier ─────────────────────────────────────────────
+# 3ème Pilier 
 with tab3:
-    st.markdown("### 💰 3ème Pilier — Épargne privée")
+    st.markdown("### 3ème Pilier — Épargne privée")
     st.markdown(
         f"""
         <div class="section-card">
@@ -286,7 +280,6 @@ with tab3:
         st.markdown(
             f"""
             <div class="kpi-card">
-                <div class="kpi-emoji">💰</div>
                 <div class="kpi-value">CHF {sim_3a['capital_final']:,.0f}</div>
                 <div class="kpi-label">Capital à {age_retraite} ans</div>
             </div>
@@ -297,7 +290,6 @@ with tab3:
         st.markdown(
             f"""
             <div class="kpi-card">
-                <div class="kpi-emoji">📊</div>
                 <div class="kpi-value">CHF {sim_3a['total_interets']:,.0f}</div>
                 <div class="kpi-label">Intérêts cumulés</div>
             </div>
@@ -308,7 +300,6 @@ with tab3:
         st.markdown(
             f"""
             <div class="kpi-card">
-                <div class="kpi-emoji">🎯</div>
                 <div class="kpi-value">{sim_3a['rendement_total_pct']}%</div>
                 <div class="kpi-label">Rendement total</div>
             </div>
@@ -350,7 +341,7 @@ with tab3:
         st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
 
     # Comparaison compte vs fonds
-    st.markdown("#### 📊 Compte bancaire vs Fonds de placement")
+    st.markdown("#### Compte bancaire vs Fonds de placement")
     sim_compte = simulation_3a(versement_3a, annees_restantes, TAUX_INTERET_3A_MOYEN, capital_3a_actuel)
     sim_fonds = simulation_3a(versement_3a, annees_restantes, TAUX_INTERET_3A_FONDS, capital_3a_actuel)
 
@@ -359,7 +350,7 @@ with tab3:
         st.markdown(
             f"""
             <div class="section-card">
-                <b>🏦 Compte bancaire (~1.5%/an)</b><br><br>
+                <b> Compte bancaire (~1.5%/an)</b><br><br>
                 Capital final : <b style="color: #6C63FF;">CHF {sim_compte['capital_final']:,.0f}</b><br>
                 Intérêts cumulés : CHF {sim_compte['total_interets']:,.0f}<br>
                 <span class="risk-badge risk-low">Risque faible</span>
@@ -371,7 +362,7 @@ with tab3:
         st.markdown(
             f"""
             <div class="section-card">
-                <b>📈 Fonds de placement (~4.5%/an)</b><br><br>
+                <b> Fonds de placement (~4.5%/an)</b><br><br>
                 Capital final : <b style="color: #00D4AA;">CHF {sim_fonds['capital_final']:,.0f}</b><br>
                 Intérêts cumulés : CHF {sim_fonds['total_interets']:,.0f}<br>
                 <span class="risk-badge risk-medium">Risque modéré</span>
@@ -385,16 +376,16 @@ with tab3:
         st.markdown(
             f"""
             <div class="suggestion-haute">
-                <b>💡 Différence fonds vs compte : + CHF {diff:,.0f}</b><br>
+                <b> Différence fonds vs compte : + CHF {diff:,.0f}</b><br>
                 <span style="color: #A0A3B1;">Sur {annees_restantes} ans, les fonds de placement génèrent potentiellement CHF {diff:,.0f} de plus, mais avec un risque de perte à court terme.</span>
             </div>
             """,
             unsafe_allow_html=True,
         )
 
-# ─── Vue Globale ─────────────────────────────────────────────
+# Vue Globale 
 with tab4:
-    st.markdown("### 📊 Projection globale de la retraite")
+    st.markdown("### Projection globale de la retraite")
 
     projection = projection_retraite_globale(
         salaire_annuel=salaire,
@@ -413,7 +404,6 @@ with tab4:
         st.markdown(
             f"""
             <div class="kpi-card">
-                <div class="kpi-emoji">🎯</div>
                 <div class="kpi-value">CHF {projection['rente_totale_mensuelle']:,.0f}</div>
                 <div class="kpi-label">Rente totale / mois</div>
             </div>
@@ -425,7 +415,6 @@ with tab4:
         st.markdown(
             f"""
             <div class="kpi-card">
-                <div class="kpi-emoji">📊</div>
                 <div class="kpi-value" style="background: {taux_color}; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{projection['taux_remplacement']}%</div>
                 <div class="kpi-label">Taux de remplacement</div>
             </div>
@@ -436,7 +425,6 @@ with tab4:
         st.markdown(
             f"""
             <div class="kpi-card">
-                <div class="kpi-emoji">💼</div>
                 <div class="kpi-value">CHF {projection['revenu_mensuel_actuel']:,.0f}</div>
                 <div class="kpi-label">Revenu actuel / mois</div>
             </div>
@@ -448,7 +436,6 @@ with tab4:
         st.markdown(
             f"""
             <div class="kpi-card">
-                <div class="kpi-emoji">{"⚠️" if projection['gap_mensuel'] > 0 else "✅"}</div>
                 <div class="kpi-value" style="background: {gap_color}; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">CHF {abs(projection['gap_mensuel']):,.0f}</div>
                 <div class="kpi-label">{"Écart mensuel" if projection['gap_mensuel'] > 0 else "Surplus mensuel"}</div>
             </div>
@@ -531,7 +518,7 @@ with tab4:
         st.markdown(
             f"""
             <div class="suggestion-haute">
-                <b>⚠️ Écart de prévoyance : CHF {projection['gap_mensuel']:,.0f}/mois</b><br>
+                <b> Écart de prévoyance : CHF {projection['gap_mensuel']:,.0f}/mois</b><br>
                 <span style="color: #A0A3B1;">
                     Votre rente projetée couvre {projection['taux_remplacement']}% de votre revenu actuel.
                     L'objectif recommandé est de 60-80%. Envisagez d'augmenter vos cotisations 3a, d'effectuer des rachats LPP,
@@ -542,7 +529,7 @@ with tab4:
             unsafe_allow_html=True,
         )
 
-# ─── Sauvegarde ──────────────────────────────────────────────
+# Sauvegarde 
 prev_params = {
     "age": age, "salaire": salaire, "age_retraite": age_retraite,
     "annees_cotisation": annees_cotisation,
@@ -563,12 +550,12 @@ prev_results = {
 
 simulation_save_section("prevoyance", prev_params, prev_results)
 
-# ─── Footer ──────────────────────────────────────────────────
+# Footer 
 st.markdown(
     """
     <div class="footer-text">
         Finance Advisor · Module Prévoyance · Suisse Romande<br>
-        ⚠️ Les projections sont basées sur des hypothèses simplifiées et ne garantissent pas les résultats futurs
+        Les projections sont basées sur des hypothèses simplifiées et ne garantissent pas les résultats futurs
     </div>
     """,
     unsafe_allow_html=True,

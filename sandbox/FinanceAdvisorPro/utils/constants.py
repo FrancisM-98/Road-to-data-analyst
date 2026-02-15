@@ -3,24 +3,24 @@ Constantes financières suisses — Valeurs 2025
 Ces valeurs sont fournies à titre indicatif et doivent être mises à jour annuellement.
 """
 
-# ─── 3ème Pilier ───────────────────────────────────────────
-PILIER_3A_SALARIE = 7_056        # Plafond annuel 3a (salarié avec 2e pilier)
-PILIER_3A_INDEPENDANT = 35_280   # Plafond annuel 3a (indépendant sans 2e pilier)
+# 3ème Pilier 
+PILIER_3A_SALARIE = 7_056         # Plafond annuel 3a (salarié avec 2e pilier)
+PILIER_3A_INDEPENDANT = 35_280    # Plafond annuel 3a (indépendant sans 2e pilier)
 
-# ─── AVS / AI / APG (1er Pilier) ──────────────────────────
-TAUX_AVS_TOTAL = 0.087           # 8.7% (4.35% employeur + 4.35% employé)
+# AVS / AI / APG (1er Pilier) 
+TAUX_AVS_TOTAL = 0.087            # 8.7% (4.35% employeur + 4.35% employé)
 TAUX_AVS_EMPLOYE = 0.0435
-TAUX_AI = 0.014                  # 1.4%
-TAUX_APG = 0.005                 # 0.5%
-RENTE_AVS_MAX_MENSUELLE = 2_450  # Rente AVS maximale mensuelle (simple)
-RENTE_AVS_MIN_MENSUELLE = 1_225  # Rente AVS minimale mensuelle
-SALAIRE_AVS_MAX_POUR_RENTE = 88_200  # Revenu annuel moyen pour rente max
+TAUX_AI = 0.014                   # 1.4%
+TAUX_APG = 0.005                  # 0.5%
+RENTE_AVS_MAX_MENSUELLE = 2_450   # Rente AVS maximale mensuelle (simple)
+RENTE_AVS_MIN_MENSUELLE = 1_225   # Rente AVS minimale mensuelle
+SALAIRE_AVS_MAX_POUR_RENTE = 88_200 # Revenu annuel moyen pour rente max
 
-# ─── LPP (2ème Pilier) ────────────────────────────────────
-SEUIL_ENTREE_LPP = 22_050       # Seuil d'entrée LPP
-DEDUCTION_COORDINATION = 25_725  # Déduction de coordination
-SALAIRE_MAX_LPP = 88_200        # Salaire maximum assuré
-TAUX_CONVERSION_LPP = 0.068     # Taux de conversion (6.8%)
+# LPP (2ème Pilier) 
+SEUIL_ENTREE_LPP = 22_050         # Seuil d'entrée LPP
+DEDUCTION_COORDINATION = 25_725   # Déduction de coordination
+SALAIRE_MAX_LPP = 88_200          # Salaire maximum assuré
+TAUX_CONVERSION_LPP = 0.068       # Taux de conversion (6.8%)
 
 # Taux de cotisation LPP par tranche d'âge (part employé, minimum légal)
 TAUX_LPP_PAR_AGE = {
@@ -30,12 +30,12 @@ TAUX_LPP_PAR_AGE = {
     (55, 65): 0.09,    # 18% total, 9% employé
 }
 
-# ─── Taux de rendement estimés ─────────────────────────────
-TAUX_INTERET_LPP = 0.01         # Taux d'intérêt minimal LPP (1%)
-TAUX_INTERET_3A_MOYEN = 0.015   # Rendement moyen 3a compte bancaire
-TAUX_INTERET_3A_FONDS = 0.045   # Rendement moyen 3a fonds de placement
+# Taux de rendement estimés 
+TAUX_INTERET_LPP = 0.01           # Taux d'intérêt minimal LPP (1%)
+TAUX_INTERET_3A_MOYEN = 0.015     # Rendement moyen 3a compte bancaire
+TAUX_INTERET_3A_FONDS = 0.045     # Rendement moyen 3a fonds de placement
 
-# ─── Impôts fédéraux — Barème 2025 (personnes seules) ─────
+# Impôts fédéraux — Barème 2025 (personnes seules) 
 BAREME_FEDERAL_SEUL = [
     (14_500, 0.0),
     (31_600, 0.0077),
@@ -69,13 +69,13 @@ BAREME_FEDERAL_MARIE = [
     (float('inf'), 0.115),
 ]
 
-# ─── Coefficients fiscaux cantonaux (estimation simplifiée) ─
+# Coefficients fiscaux cantonaux (estimation simplifiée) 
 # Multiplicateur appliqué à l'impôt cantonal de base
 CANTONS_ROMANDS = {
     "Vaud (VD)": {
         "coefficient_cantonal": 1.545,
         "coefficient_communal_moyen": 0.785,  # Moyenne des communes
-        "taux_impot_fortune": 0.005,           # Taux moyen sur la fortune
+        "taux_impot_fortune": 0.005,          # Taux moyen sur la fortune
         "communes": {
             "Lausanne": 0.79,
             "Montreux": 0.81,
@@ -152,52 +152,48 @@ CANTONS_ROMANDS = {
     },
 }
 
-# ─── Catégories budgétaires (moyennes suisses OFS) ────────
+# Catégories budgétaires (moyennes suisses OFS) 
 CATEGORIES_BUDGET = {
-    "Logement": {"moyenne_pct": 0.33, "emoji": "🏠"},
-    "Assurance maladie": {"moyenne_pct": 0.07, "emoji": "🏥"},
-    "Alimentation": {"moyenne_pct": 0.11, "emoji": "🍽️"},
-    "Transport": {"moyenne_pct": 0.08, "emoji": "🚗"},
-    "Impôts": {"moyenne_pct": 0.12, "emoji": "🏛️"},
-    "Loisirs & Culture": {"moyenne_pct": 0.06, "emoji": "🎭"},
-    "Communication": {"moyenne_pct": 0.03, "emoji": "📱"},
-    "Habillement": {"moyenne_pct": 0.03, "emoji": "👔"},
-    "Épargne & Prévoyance": {"moyenne_pct": 0.12, "emoji": "💰"},
-    "Autres": {"moyenne_pct": 0.05, "emoji": "📦"},
+    "Logement": {"moyenne_pct": 0.33},
+    "Assurance maladie": {"moyenne_pct": 0.07},
+    "Alimentation": {"moyenne_pct": 0.11},
+    "Transport": {"moyenne_pct": 0.08},
+    "Impôts": {"moyenne_pct": 0.12},
+    "Loisirs & Culture": {"moyenne_pct": 0.06},
+    "Communication": {"moyenne_pct": 0.03},
+    "Habillement": {"moyenne_pct": 0.03},
+    "Épargne & Prévoyance": {"moyenne_pct": 0.12},
+    "Autres": {"moyenne_pct": 0.05},
 }
 
-# ─── Profils d'investissement ─────────────────────────────
+# Profils d'investissement 
 PROFILS_INVESTISSEMENT = {
     "Conservateur": {
         "description": "Priorité à la sécurité du capital",
         "rendement_moyen": 0.03,
         "volatilite": 0.04,
         "allocation": {"Obligations": 60, "Actions": 15, "Immobilier": 15, "Liquidités": 10},
-        "emoji": "🛡️",
     },
     "Équilibré": {
         "description": "Bon équilibre risque/rendement",
         "rendement_moyen": 0.055,
         "volatilite": 0.08,
         "allocation": {"Obligations": 35, "Actions": 35, "Immobilier": 20, "Liquidités": 10},
-        "emoji": "⚖️",
     },
     "Dynamique": {
         "description": "Recherche de rendement à long terme",
         "rendement_moyen": 0.07,
         "volatilite": 0.12,
         "allocation": {"Obligations": 15, "Actions": 55, "Immobilier": 20, "Liquidités": 10},
-        "emoji": "🚀",
     },
     "Agressif": {
         "description": "Rendement maximal, haute volatilité",
         "rendement_moyen": 0.09,
         "volatilite": 0.18,
         "allocation": {"Obligations": 5, "Actions": 70, "Immobilier": 15, "Crypto": 5, "Liquidités": 5},
-        "emoji": "🔥",
     },
 }
 
-# ─── Âge de retraite ──────────────────────────────────────
+# Âge de retraite 
 AGE_RETRAITE_HOMMES = 65
-AGE_RETRAITE_FEMMES = 65  # Harmonisé avec AVS 21
+AGE_RETRAITE_FEMMES = 65 # Harmonisé avec AVS 21

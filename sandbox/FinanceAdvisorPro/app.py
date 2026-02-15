@@ -1,5 +1,5 @@
 """
-🏦 Finance Advisor Pro — Dashboard Principal
+Finance Advisor Pro -- Dashboard Principal
 Version B2B pour conseillers financiers
 """
 
@@ -10,7 +10,7 @@ from pathlib import Path
 # ─── Configuration ───────────────────────────────────────────
 st.set_page_config(
     page_title="Finance Advisor Pro",
-    page_icon="🏦",
+    page_icon="FA",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -40,7 +40,7 @@ advisor_id = user["username"]
 with st.sidebar:
     # Logo / Nom du cabinet
     cabinet_name = user.get("cabinet", "") or "Finance Advisor Pro"
-    st.markdown(f"# 🏦 {cabinet_name}")
+    st.markdown(f"# {cabinet_name}")
     st.markdown("**Suisse Romande**")
     st.markdown("---")
 
@@ -48,16 +48,16 @@ with st.sidebar:
     current_client = st.session_state.get("current_client")
     if current_client:
         nom_complet = f"{current_client.get('prenom', '')} {current_client.get('nom', '')}".strip()
-        st.markdown(f"### 👤 Client actif")
+        st.markdown("### Client actif")
         st.markdown(f"**{nom_complet}**")
         st.markdown(f"_{current_client.get('canton', '')} · CHF {current_client.get('salaire_annuel', 0):,.0f}/an_")
 
-        if st.button("✖ Désélectionner", key="sidebar_deselect", use_container_width=True):
+        if st.button("Désélectionner", key="sidebar_deselect", use_container_width=True):
             st.session_state.current_client = None
             st.rerun()
     else:
-        st.markdown("### 👤 Aucun client")
-        st.info("Rendez-vous dans **👥 Clients** pour sélectionner un client.")
+        st.markdown("### Aucun client")
+        st.info("Rendez-vous dans **Clients** pour sélectionner un client.")
 
     sidebar_user_info()
 
@@ -68,7 +68,7 @@ greeting = f"Bonjour {user['name'].split()[0]}"
 st.markdown(
     f"""
     <div class="premium-header">
-        <div class="premium-title">{greeting} 👋</div>
+        <div class="premium-title">{greeting}</div>
         <div class="premium-subtitle">
             Votre tableau de bord conseiller · {cabinet_name}
         </div>
@@ -89,7 +89,6 @@ with col1:
     st.markdown(
         f"""
         <div class="kpi-card">
-            <div class="kpi-emoji">👥</div>
             <div class="kpi-value">{stats['total']}</div>
             <div class="kpi-label">Clients total</div>
         </div>
@@ -101,7 +100,6 @@ with col2:
     st.markdown(
         f"""
         <div class="kpi-card">
-            <div class="kpi-emoji">🟡</div>
             <div class="kpi-value">{stats['prospects']}</div>
             <div class="kpi-label">Prospects</div>
         </div>
@@ -113,7 +111,6 @@ with col3:
     st.markdown(
         f"""
         <div class="kpi-card">
-            <div class="kpi-emoji">🟢</div>
             <div class="kpi-value">{stats['actifs']}</div>
             <div class="kpi-label">Clients actifs</div>
         </div>
@@ -127,7 +124,6 @@ with col4:
     st.markdown(
         f"""
         <div class="kpi-card">
-            <div class="kpi-emoji">📈</div>
             <div class="kpi-value">{taux_conv}%</div>
             <div class="kpi-label">Taux de conversion</div>
         </div>
@@ -139,7 +135,7 @@ st.markdown("<br>", unsafe_allow_html=True)
 
 # ─── Aperçu du client sélectionné ou vue d'ensemble ─────────
 if current_client:
-    st.markdown("### 📊 Aperçu du client")
+    st.markdown("### Aperçu du client")
 
     nom_complet = f"{current_client.get('prenom', '')} {current_client.get('nom', '')}".strip()
     salaire = current_client.get("salaire_annuel", 0)
@@ -159,17 +155,16 @@ if current_client:
 
         sub_cols = st.columns(4)
         kpis = [
-            ("💰", f"CHF {salaire_net_mois:,}", "Salaire net / mois"),
-            ("🏛️", f"CHF {impot_estime:,}", "Impôts estimés / an"),
-            ("🏦", f"CHF {patrimoine_prevoyance:,}", "Patrimoine prévoyance"),
-            ("⏳", f"{annees_retraite} ans", "Jusqu'à la retraite"),
+            (f"CHF {salaire_net_mois:,}", "Salaire net / mois"),
+            (f"CHF {impot_estime:,}", "Impôts estimés / an"),
+            (f"CHF {patrimoine_prevoyance:,}", "Patrimoine prévoyance"),
+            (f"{annees_retraite} ans", "Jusqu'à la retraite"),
         ]
-        for sub_col, (emoji, value, label) in zip(sub_cols, kpis):
+        for sub_col, (value, label) in zip(sub_cols, kpis):
             with sub_col:
                 st.markdown(
                     f"""
                     <div class="kpi-card">
-                        <div class="kpi-emoji">{emoji}</div>
                         <div class="kpi-value">{value}</div>
                         <div class="kpi-label">{label}</div>
                     </div>
@@ -179,7 +174,7 @@ if current_client:
 
     with col_right:
         # Estimation rapide de la répartition
-        st.markdown("### 🎯 Répartition budgétaire estimée")
+        st.markdown("### Répartition budgétaire estimée")
 
         categories = ["Logement", "Assurance maladie", "Alimentation", "Transport",
                        "Impôts", "Loisirs", "Épargne", "Autres"]
@@ -219,14 +214,14 @@ if current_client:
         st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
 
 else:
-    st.markdown("### 🚀 Actions rapides")
+    st.markdown("### Actions rapides")
     col_a, col_b, col_c = st.columns(3)
 
     with col_a:
         st.markdown(
             """
             <div class="suggestion-haute">
-                <b>👥 Gérer vos clients</b><br>
+                <b>Gérer vos clients</b><br>
                 <span style="color: #A0A3B1;">
                     Ajoutez vos premiers clients ou chargez un cas type pour démarrer une simulation.
                 </span>
@@ -239,7 +234,7 @@ else:
         st.markdown(
             """
             <div class="suggestion-moyenne">
-                <b>📋 Cas types</b><br>
+                <b>Cas types</b><br>
                 <span style="color: #A0A3B1;">
                     5 profils pré-configurés (jeune diplômé, famille, cadre, retraite, indépendant) pour vos démos.
                 </span>
@@ -252,9 +247,9 @@ else:
         st.markdown(
             """
             <div class="suggestion-haute">
-                <b>🔄 Workflow type</b><br>
+                <b>Workflow type</b><br>
                 <span style="color: #A0A3B1;">
-                    Client → Budget → Fiscalité → Prévoyance → Investissement → Rapport PDF
+                    Client > Budget > Fiscalité > Prévoyance > Investissement > Rapport PDF
                 </span>
             </div>
             """,
@@ -264,25 +259,27 @@ else:
 
 # ─── Modules disponibles ────────────────────────────────────
 st.markdown("---")
-st.markdown("### 📚 Modules de simulation")
+st.markdown("### Modules de simulation")
 
 col_m1, col_m2, col_m3, col_m4 = st.columns(4)
 
 modules = [
-    (col_m1, "💰", "Budget", "Revenus, charges fixes et variables, comparaison CH"),
-    (col_m2, "🏛️", "Fiscalité", "Impôts cantonaux, déductions, optimisation"),
-    (col_m3, "🔒", "Prévoyance", "AVS, LPP, 3ème pilier, gap retraite"),
-    (col_m4, "📈", "Investissements", "Intérêts composés, Monte Carlo, profils de risque"),
+    (col_m1, "Budget", "Revenus, charges fixes et variables, comparaison CH", "pages/1_Budget.py"),
+    (col_m2, "Fiscalité", "Impôts cantonaux, déductions, optimisation", "pages/2_Fiscalite.py"),
+    (col_m3, "Prévoyance", "AVS, LPP, 3ème pilier, gap retraite", "pages/3_Prevoyance.py"),
+    (col_m4, "Investissements", "Intérêts composés, Monte Carlo, profils de risque", "pages/4_Investissements.py"),
 ]
 
-for col, emoji, name, desc in modules:
+for col, name, desc, page_path in modules:
     with col:
+        st.markdown(f"<div style='height: 10px'></div>", unsafe_allow_html=True)
+        if st.button(name, key=f"nav_{name}", use_container_width=True, type="primary"):
+            st.switch_page(page_path)
+            
         st.markdown(
             f"""
-            <div class="kpi-card" style="cursor: pointer;">
-                <div class="kpi-emoji">{emoji}</div>
-                <div class="kpi-value" style="font-size: 1.2rem;">{name}</div>
-                <div class="kpi-label" style="font-size: 0.8rem;">{desc}</div>
+            <div style="text-align: center; font-size: 0.8rem; color: #A0A3B1; margin-top: 0.5rem;">
+                {desc}
             </div>
             """,
             unsafe_allow_html=True,

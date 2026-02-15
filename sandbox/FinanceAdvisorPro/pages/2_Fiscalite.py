@@ -1,5 +1,5 @@
 """
-🏛️ Module Fiscalité — Simulateur fiscal suisse
+Module Fiscalité — Simulateur fiscal suisse
 """
 
 import streamlit as st
@@ -24,7 +24,7 @@ require_auth()
 sidebar_user_info()
 init_db()
 
-# ─── Client context ──────────────────────────────────────────
+# Client context 
 client = st.session_state.get("current_client")
 cantons_list = list(CANTONS_ROMANDS.keys())
 default_canton_idx = cantons_list.index(client["canton"]) if client and client.get("canton") in cantons_list else 0
@@ -32,11 +32,11 @@ default_salaire = int(client.get("salaire_annuel", 85_000)) if client else 85_00
 default_enfants = client.get("enfants", 0) if client else 0
 default_marie = client.get("situation_familiale", "") in ["Marié·e", "Marié·e"] if client else False
 
-# ─── Titre ───────────────────────────────────────────────────
+# Titre 
 st.markdown(
     """
     <div class="animate-in">
-        <div class="premium-title">🏛️ Simulateur Fiscal</div>
+        <div class="premium-title"> Simulateur Fiscal</div>
         <div class="premium-subtitle">Estimez vos impôts et optimisez votre situation fiscale · Cantons romands</div>
     </div>
     """,
@@ -45,8 +45,8 @@ st.markdown(
 
 client_banner()
 
-# ─── Paramètres ──────────────────────────────────────────────
-st.markdown("### 📋 Votre situation")
+# Paramètres 
+st.markdown("### Votre situation")
 
 col1, col2, col3 = st.columns(3)
 with col1:
@@ -74,14 +74,14 @@ with col6:
         key="ded_3a",
     )
 
-with st.expander("🔧 Déductions supplémentaires"):
+with st.expander(" Déductions supplémentaires"):
     col_a, col_b = st.columns(2)
     with col_a:
         rachat_lpp = st.number_input("Rachat LPP (CHF)", 0, 200_000, 0, 1_000, key="rachat_lpp")
     with col_b:
         frais_effectifs = st.number_input("Frais effectifs (CHF)", 0, 50_000, 0, 500, key="frais_eff")
 
-# ─── Calcul ──────────────────────────────────────────────────
+# Calcul 
 result = calcul_impot_total(
     revenu_brut=revenu_brut,
     canton=canton,
@@ -93,9 +93,9 @@ result = calcul_impot_total(
     deduction_frais_effectifs=frais_effectifs,
 )
 
-# ─── Résultats ───────────────────────────────────────────────
+# Résultats 
 st.markdown("---")
-st.markdown("### 💰 Résultats de la simulation")
+st.markdown("### Résultats de la simulation")
 
 col1, col2, col3, col4 = st.columns(4)
 
@@ -103,7 +103,6 @@ with col1:
     st.markdown(
         f"""
         <div class="kpi-card">
-            <div class="kpi-emoji">🏛️</div>
             <div class="kpi-value">CHF {result['impot_total']:,.0f}</div>
             <div class="kpi-label">Impôt total annuel</div>
         </div>
@@ -115,7 +114,6 @@ with col2:
     st.markdown(
         f"""
         <div class="kpi-card">
-            <div class="kpi-emoji">📊</div>
             <div class="kpi-value">{result['taux_effectif']}%</div>
             <div class="kpi-label">Taux effectif</div>
         </div>
@@ -128,7 +126,6 @@ with col3:
     st.markdown(
         f"""
         <div class="kpi-card">
-            <div class="kpi-emoji">📅</div>
             <div class="kpi-value">CHF {impot_mensuel:,}</div>
             <div class="kpi-label">Impôt mensuel</div>
         </div>
@@ -140,7 +137,6 @@ with col4:
     st.markdown(
         f"""
         <div class="kpi-card">
-            <div class="kpi-emoji">📝</div>
             <div class="kpi-value">CHF {result['total_deductions']:,.0f}</div>
             <div class="kpi-label">Total déductions</div>
         </div>
@@ -150,11 +146,11 @@ with col4:
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# ─── Détail des impôts ──────────────────────────────────────
+# Détail des impôts 
 col_left, col_right = st.columns(2)
 
 with col_left:
-    st.markdown("### 📊 Décomposition de l'impôt")
+    st.markdown("### Décomposition de l'impôt")
 
     fig = go.Figure(data=[go.Pie(
         labels=["Fédéral", "Cantonal", "Communal"],
@@ -185,7 +181,7 @@ with col_left:
     st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
 
 with col_right:
-    st.markdown("### 📝 Détail des déductions")
+    st.markdown("### Détail des déductions")
 
     deductions = result["detail_deductions"]
     for label, montant in deductions.items():
@@ -206,9 +202,9 @@ with col_right:
                 unsafe_allow_html=True,
             )
 
-# ─── Comparaison cantonale ───────────────────────────────────
+# Comparaison cantonale 
 st.markdown("---")
-st.markdown("### 🗺️ Comparaison inter-cantonale")
+st.markdown("### Comparaison inter-cantonale")
 
 comparaison = comparaison_cantonale(revenu_brut, is_marie, enfants, deduction_3a)
 
@@ -254,16 +250,16 @@ if economie > 0 and canton != canton_min:
     st.markdown(
         f"""
         <div class="suggestion-info">
-            <b>🗺️ Le canton le plus avantageux est {canton_min}</b><br>
+            <b> Le canton le plus avantageux est {canton_min}</b><br>
             <span style="color: #A0A3B1;">Économie potentielle de <b>CHF {economie:,.0f}/an</b> par rapport à votre canton actuel ({canton}).</span>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-# ─── Suggestions d'optimisation ─────────────────────────────
+# Suggestions d'optimisation 
 st.markdown("---")
-st.markdown("### 💡 Optimisations fiscales recommandées")
+st.markdown("### Optimisations fiscales recommandées")
 
 suggestions = suggestions_optimisation(
     revenu_brut=revenu_brut,
@@ -282,7 +278,7 @@ if suggestions:
             <div class="{css_class}">
                 <b>{s['titre']}</b><br>
                 <span style="color: #A0A3B1;">{s['description']}</span><br>
-                <span style="color: #00D4AA; font-weight: 700;">💰 Économie estimée : CHF {s['economie_estimee']:,.0f}/an</span>
+                <span style="color: #00D4AA; font-weight: 700;"> Économie estimée : CHF {s['economie_estimee']:,.0f}/an</span>
             </div>
             """,
             unsafe_allow_html=True,
@@ -291,14 +287,14 @@ else:
     st.markdown(
         """
         <div class="suggestion-info">
-            <b>✅ Votre situation semble déjà bien optimisée !</b><br>
+            <b> Votre situation semble déjà bien optimisée !</b><br>
             <span style="color: #A0A3B1;">Continuez à maximiser votre 3ème pilier et surveillez les évolutions législatives.</span>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-# ─── Sauvegarde ──────────────────────────────────────────────
+# Sauvegarde 
 fisc_params = {
     "revenu_brut": revenu_brut, "canton": canton, "commune": commune,
     "marie": marie, "enfants": enfants, "deduction_3a": deduction_3a,
@@ -312,12 +308,12 @@ fisc_results = {
 
 simulation_save_section("fiscalite", fisc_params, fisc_results)
 
-# ─── Footer ──────────────────────────────────────────────────
+# Footer 
 st.markdown(
     """
     <div class="footer-text">
         Finance Advisor · Module Fiscalité · Suisse Romande<br>
-        ⚠️ Estimation simplifiée — Consultez un fiduciaire pour une déclaration exacte
+        Estimation simplifiée — Consultez un fiduciaire pour une déclaration exacte
     </div>
     """,
     unsafe_allow_html=True,

@@ -257,14 +257,14 @@ def login_page():
         st.markdown(
             """
             <div style="text-align: center; margin-top: 3rem;">
-                <div class="login-title">🏦 Finance Advisor Pro</div>
+                <div class="login-title">Finance Advisor Pro</div>
                 <div class="login-subtitle">Connectez-vous à votre espace conseiller</div>
             </div>
             """,
             unsafe_allow_html=True,
         )
 
-        tab_login, tab_register = st.tabs(["🔐 Connexion", "📝 Créer un compte"])
+        tab_login, tab_register = st.tabs(["Connexion", "Créer un compte"])
 
         with tab_login:
             with st.form("login_form"):
@@ -284,7 +284,7 @@ def login_page():
                             st.session_state._login_token = token
                             st.rerun()
                         else:
-                            st.error("❌ Identifiant ou mot de passe incorrect.")
+                            st.error("Identifiant ou mot de passe incorrect.")
                     else:
                         st.warning("Veuillez remplir tous les champs.")
 
@@ -320,9 +320,9 @@ def login_page():
                             cabinet=new_cabinet,
                         )
                         if success:
-                            st.success("✅ Compte créé ! Vous pouvez maintenant vous connecter.")
+                            st.success("Compte créé ! Vous pouvez maintenant vous connecter.")
                         else:
-                            st.error("❌ Cet identifiant est déjà pris.")
+                            st.error("Cet identifiant est déjà pris.")
 
 
     return False
@@ -362,10 +362,10 @@ def sidebar_user_info():
     user = get_current_user()
     if user:
         st.sidebar.markdown("---")
-        st.sidebar.markdown(f"**👤 {user['name']}**")
+        st.sidebar.markdown(f"**{user['name']}**")
         if user.get("cabinet"):
-            st.sidebar.markdown(f"🏢 {user['cabinet']}")
-        if st.sidebar.button("🚪 Déconnexion", use_container_width=True):
+            st.sidebar.markdown(f"{user['cabinet']}")
+        if st.sidebar.button("Déconnexion", use_container_width=True):
             logout()
             st.rerun()
 
@@ -376,7 +376,7 @@ def client_banner():
     if client:
         nom_complet = f"{client.get('prenom', '')} {client.get('nom', '')}".strip()
         statut = client.get("statut", "prospect")
-        statut_emoji = {"prospect": "🟡", "actif": "🟢", "inactif": "🔴"}.get(statut, "⚪")
+        statut_label = {"prospect": "Prospect", "actif": "Actif", "inactif": "Inactif"}.get(statut, statut.capitalize())
 
         st.markdown(
             f"""
@@ -391,9 +391,9 @@ def client_banner():
                 align-items: center;
             ">
                 <div>
-                    <span style="font-weight: 700; font-size: 1.05rem;">👤 {nom_complet}</span>
+                    <span style="font-weight: 700; font-size: 1.05rem;">{nom_complet}</span>
                     <span style="margin-left: 1rem; color: var(--text-secondary);">
-                        {statut_emoji} {statut.capitalize()} ·
+                        {statut_label} ·
                         {client.get('canton', '')} ·
                         CHF {client.get('salaire_annuel', 0):,.0f}/an
                     </span>
@@ -416,11 +416,11 @@ def client_banner():
                     color: #FFB347;
                     font-size: 0.9rem;
                 ">
-                    ⚠️ Aucun client sélectionné
+                    Aucun client sélectionné
                 </div>
                 """,
                 unsafe_allow_html=True,
             )
         with col_btn:
-            if st.button("👥 Sélectionner un client", use_container_width=True):
+            if st.button("Sélectionner un client", use_container_width=True):
                 st.switch_page("pages/0_Clients.py")

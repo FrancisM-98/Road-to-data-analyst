@@ -1,5 +1,5 @@
 """
-💰 Module Budget — Gestion budgétaire
+Module Budget — Gestion budgétaire
 """
 
 import streamlit as st
@@ -15,25 +15,26 @@ from utils.auth import require_auth, sidebar_user_info, client_banner
 from utils.database import init_db
 from utils.simulation_manager import simulation_save_section, get_loaded_params
 
-# ─── Auth Guard ──────────────────────────────────────────────
+# Auth Guard 
 require_auth()
 sidebar_user_info()
 init_db()
 
-# ─── Client context ──────────────────────────────────────────
+# Client context 
 client = st.session_state.get("current_client")
 client_salaire_net = round(client.get("salaire_annuel", 0) * 0.87 / 12) if client else 6_200
 client_budget = (client or {}).get("_budget", {})
 
-# ─── Loaded simulation override ─────────────────────────────
+# Loaded simulation override 
 loaded = get_loaded_params("budget")
 if loaded:
-    client_budget = loaded  # Override with saved simulation params
-# ─── Titre ───────────────────────────────────────────────────
+    client_budget = loaded # Override with saved simulation params
+
+# Titre 
 st.markdown(
     """
     <div class="animate-in">
-        <div class="premium-title">💰 Gestion Budgétaire</div>
+        <div class="premium-title"> Gestion Budgétaire</div>
         <div class="premium-subtitle">Maîtrisez vos finances personnelles · Revenus, charges et épargne</div>
     </div>
     """,
@@ -42,8 +43,8 @@ st.markdown(
 
 client_banner()
 
-# ─── Revenus ─────────────────────────────────────────────────
-st.markdown("### 💼 Revenus mensuels")
+# Revenus 
+st.markdown("### Revenus mensuels")
 col1, col2, col3 = st.columns(3)
 
 with col1:
@@ -55,9 +56,9 @@ with col3:
 
 revenu_total = salaire_net + bonus_mensuel + revenus_annexes
 
-# ─── Charges Fixes ───────────────────────────────────────────
+# Charges Fixes 
 st.markdown("---")
-st.markdown("### 🏠 Charges fixes mensuelles")
+st.markdown("### Charges fixes mensuelles")
 
 col1, col2, col3, col4 = st.columns(4)
 with col1:
@@ -81,9 +82,9 @@ with col8:
 
 total_charges_fixes = loyer + assurance_maladie + impots_mensuels + transport + assurances_autres + telecom + prevoyance_3a + charges_autres
 
-# ─── Dépenses Variables ─────────────────────────────────────
+# Dépenses Variables 
 st.markdown("---")
-st.markdown("### 🛒 Dépenses variables mensuelles")
+st.markdown("### Dépenses variables mensuelles")
 
 col1, col2, col3, col4 = st.columns(4)
 with col1:
@@ -107,7 +108,7 @@ with col8:
 
 total_variables = alimentation + restaurants + loisirs + habillement + sante + cadeaux + vacances + depenses_autres
 
-# ─── Bilan ───────────────────────────────────────────────────
+# Bilan 
 st.markdown("---")
 
 total_depenses = total_charges_fixes + total_variables
@@ -120,7 +121,6 @@ with col1:
     st.markdown(
         f"""
         <div class="kpi-card">
-            <div class="kpi-emoji">💰</div>
             <div class="kpi-value">CHF {revenu_total:,}</div>
             <div class="kpi-label">Revenus totaux</div>
         </div>
@@ -132,7 +132,6 @@ with col2:
     st.markdown(
         f"""
         <div class="kpi-card">
-            <div class="kpi-emoji">📋</div>
             <div class="kpi-value">CHF {total_depenses:,}</div>
             <div class="kpi-label">Dépenses totales</div>
         </div>
@@ -145,7 +144,6 @@ with col3:
     st.markdown(
         f"""
         <div class="kpi-card">
-            <div class="kpi-emoji">{"✅" if solde >= 0 else "⚠️"}</div>
             <div class="kpi-value" style="background: {color}; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">CHF {solde:,}</div>
             <div class="kpi-label">Solde disponible</div>
         </div>
@@ -158,7 +156,6 @@ with col4:
     st.markdown(
         f"""
         <div class="kpi-card">
-            <div class="kpi-emoji">📈</div>
             <div class="kpi-value">{taux_epargne}%</div>
             <div class="kpi-label">Taux d'épargne</div>
         </div>
@@ -168,11 +165,11 @@ with col4:
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# ─── Graphiques ──────────────────────────────────────────────
+# Graphiques 
 col_left, col_right = st.columns(2)
 
 with col_left:
-    st.markdown("### 📊 Répartition des dépenses")
+    st.markdown("### Répartition des dépenses")
 
     labels = ["Logement", "Assurance maladie", "Impôts", "Transport",
               "Alimentation", "Restaurants", "Loisirs", "Prévoyance 3a",
@@ -214,7 +211,7 @@ with col_left:
     st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
 
 with col_right:
-    st.markdown("### 📏 Fixe vs Variable vs Épargne")
+    st.markdown("### Fixe vs Variable vs Épargne")
 
     categories_bar = ["Charges fixes", "Dépenses variables", "Épargne"]
     valeurs_bar = [total_charges_fixes, total_variables, max(solde, 0)]
@@ -244,9 +241,9 @@ with col_right:
     )
     st.plotly_chart(fig2, use_container_width=True, config={"displayModeBar": False})
 
-# ─── Comparaison avec les moyennes suisses ──────────────────
+# Comparaison avec les moyennes suisses 
 st.markdown("---")
-st.markdown("### 🇨🇭 Comparaison avec les moyennes suisses")
+st.markdown("### Comparaison avec les moyennes suisses")
 
 comparaison_data = {
     "Catégorie": ["Logement", "Assurance maladie", "Alimentation", "Transport", "Impôts", "Loisirs", "Épargne"],
@@ -300,9 +297,9 @@ fig3.update_layout(
 
 st.plotly_chart(fig3, use_container_width=True, config={"displayModeBar": False})
 
-# ─── Conseils personnalisés ──────────────────────────────────
+# Conseils personnalisés 
 st.markdown("---")
-st.markdown("### 💡 Analyse personnalisée")
+st.markdown("### Analyse personnalisée")
 
 if revenu_total > 0:
     pct_logement = loyer / revenu_total * 100
@@ -310,7 +307,7 @@ if revenu_total > 0:
         st.markdown(
             f"""
             <div class="suggestion-haute">
-                <b>🏠 Logement élevé ({pct_logement:.1f}% du revenu)</b><br>
+                <b> Logement élevé ({pct_logement:.1f}% du revenu)</b><br>
                 <span style="color: #A0A3B1;">La règle des 33% est dépassée. Envisagez un logement plus abordable ou augmentez vos revenus.</span>
             </div>
             """,
@@ -321,7 +318,7 @@ if revenu_total > 0:
         st.markdown(
             """
             <div class="suggestion-haute">
-                <b>⚠️ Taux d'épargne insuffisant</b><br>
+                <b> Taux d'épargne insuffisant</b><br>
                 <span style="color: #A0A3B1;">Votre taux d'épargne est inférieur à 10%. L'idéal suisse est de 15-20%. Identifiez les dépenses à réduire.</span>
             </div>
             """,
@@ -331,7 +328,7 @@ if revenu_total > 0:
         st.markdown(
             """
             <div class="suggestion-info">
-                <b>🌟 Excellent taux d'épargne !</b><br>
+                <b> Excellent taux d'épargne !</b><br>
                 <span style="color: #A0A3B1;">Vous épargnez plus de 20% de vos revenus. Pensez à investir le surplus pour le faire fructifier.</span>
             </div>
             """,
@@ -342,14 +339,14 @@ if revenu_total > 0:
         st.markdown(
             f"""
             <div class="suggestion-moyenne">
-                <b>💰 Optimisez votre 3ème pilier</b><br>
+                <b> Optimisez votre 3ème pilier</b><br>
                 <span style="color: #A0A3B1;">Vous versez CHF {prevoyance_3a}/mois. Le maximum est CHF 588/mois (CHF 7'056/an) pour une déduction fiscale complète.</span>
             </div>
             """,
             unsafe_allow_html=True,
         )
 
-# ─── Sauvegarde ──────────────────────────────────────────────
+# Sauvegarde 
 budget_params = {
     "salaire_net": salaire_net, "bonus_mensuel": bonus_mensuel, "revenus_annexes": revenus_annexes,
     "loyer": loyer, "assurance_maladie": assurance_maladie, "impots_mensuels": impots_mensuels,
@@ -367,7 +364,7 @@ budget_results = {
 
 simulation_save_section("budget", budget_params, budget_results)
 
-# ─── Footer ──────────────────────────────────────────────────
+# Footer 
 st.markdown(
     """
     <div class="footer-text">

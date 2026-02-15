@@ -1,5 +1,5 @@
 """
-📈 Module Investissements — Simulateur d'investissement
+Module Investissements — Simulateur d'investissement
 """
 
 import streamlit as st
@@ -25,11 +25,11 @@ require_auth()
 sidebar_user_info()
 init_db()
 
-# ─── Titre ───────────────────────────────────────────────────
+# Titre 
 st.markdown(
     """
     <div class="animate-in">
-        <div class="premium-title">📈 Simulateur d'Investissement</div>
+        <div class="premium-title"> Simulateur d'Investissement</div>
         <div class="premium-subtitle">Projetez la croissance de votre patrimoine · Intérêts composés & Monte Carlo</div>
     </div>
     """,
@@ -38,17 +38,17 @@ st.markdown(
 
 client_banner()
 
-# ─── Tabs ────────────────────────────────────────────────────
+# Tabs 
 tab1, tab2, tab3, tab4 = st.tabs([
-    "🧮 Calculateur",
-    "🎯 Profils & Comparaison",
-    "📊 Monte Carlo",
-    "💸 Coût d'opportunité",
+    " Calculateur",
+    " Profils & Comparaison",
+    " Monte Carlo",
+    " Coût d'opportunité",
 ])
 
-# ═══ Tab 1 : Calculateur d'intérêts composés ════════════════
+# Tab 1 : Calculateur d'intérêts composés 
 with tab1:
-    st.markdown("### 🧮 Calculateur d'intérêts composés")
+    st.markdown("### Calculateur d'intérêts composés")
 
     col1, col2, col3, col4 = st.columns(4)
     with col1:
@@ -68,7 +68,6 @@ with tab1:
         st.markdown(
             f"""
             <div class="kpi-card">
-                <div class="kpi-emoji">💰</div>
                 <div class="kpi-value">CHF {result['capital_final']:,.0f}</div>
                 <div class="kpi-label">Capital final</div>
             </div>
@@ -79,7 +78,6 @@ with tab1:
         st.markdown(
             f"""
             <div class="kpi-card">
-                <div class="kpi-emoji">📊</div>
                 <div class="kpi-value">CHF {result['total_interets']:,.0f}</div>
                 <div class="kpi-label">Intérêts totaux</div>
             </div>
@@ -90,7 +88,6 @@ with tab1:
         st.markdown(
             f"""
             <div class="kpi-card">
-                <div class="kpi-emoji">💳</div>
                 <div class="kpi-value">CHF {result['total_verse']:,.0f}</div>
                 <div class="kpi-label">Total versé</div>
             </div>
@@ -101,7 +98,6 @@ with tab1:
         st.markdown(
             f"""
             <div class="kpi-card">
-                <div class="kpi-emoji">🚀</div>
                 <div class="kpi-value">{result['rendement_pct']:.1f}%</div>
                 <div class="kpi-label">Rendement total</div>
             </div>
@@ -148,9 +144,9 @@ with tab1:
         )
         st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
 
-# ═══ Tab 2 : Profils & Comparaison ══════════════════════════
+# Tab 2 : Profils & Comparaison 
 with tab2:
-    st.markdown("### 🎯 Profils d'investissement")
+    st.markdown("### Profils d'investissement")
 
     # Afficher les profils
     cols = st.columns(len(PROFILS_INVESTISSEMENT))
@@ -161,7 +157,6 @@ with tab2:
             st.markdown(
                 f"""
                 <div class="section-card" style="text-align: center; min-height: 280px;">
-                    <div style="font-size: 2.5rem;">{profil['emoji']}</div>
                     <h4 style="margin: 0.5rem 0;">{nom}</h4>
                     <p style="color: #A0A3B1; font-size: 0.85rem;">{profil['description']}</p>
                     <p style="font-size: 1.2rem; font-weight: 700; color: #00D4AA;">{profil['rendement_moyen']*100:.1f}%/an</p>
@@ -176,7 +171,7 @@ with tab2:
 
     # Comparaison
     st.markdown("---")
-    st.markdown("### 📊 Comparaison des scénarios")
+    st.markdown("### Comparaison des scénarios")
 
     col1, col2, col3 = st.columns(3)
     with col1:
@@ -215,7 +210,7 @@ with tab2:
     st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
 
     # Tableau comparatif
-    st.markdown("#### 📋 Résultats comparatifs")
+    st.markdown("#### Résultats comparatifs")
     tableau_data = []
     for nom, data in resultats.items():
         d = data["deterministe"]
@@ -232,9 +227,9 @@ with tab2:
     df = pd.DataFrame(tableau_data)
     st.dataframe(df, use_container_width=True, hide_index=True)
 
-# ═══ Tab 3 : Simulation Monte Carlo ═════════════════════════
+# Tab 3 : Simulation Monte Carlo 
 with tab3:
-    st.markdown("### 📊 Simulation Monte Carlo")
+    st.markdown("### Simulation Monte Carlo")
     st.markdown(
         """
         <div class="section-card">
@@ -270,7 +265,6 @@ with tab3:
         st.markdown(
             f"""
             <div class="kpi-card">
-                <div class="kpi-emoji">📊</div>
                 <div class="kpi-value">CHF {mc['mediane']:,.0f}</div>
                 <div class="kpi-label">Médiane (50%)</div>
             </div>
@@ -281,7 +275,6 @@ with tab3:
         st.markdown(
             f"""
             <div class="kpi-card">
-                <div class="kpi-emoji">⬇️</div>
                 <div class="kpi-value">CHF {mc['percentile_5']:,.0f}</div>
                 <div class="kpi-label">Pessimiste (5%)</div>
             </div>
@@ -292,7 +285,6 @@ with tab3:
         st.markdown(
             f"""
             <div class="kpi-card">
-                <div class="kpi-emoji">⬆️</div>
                 <div class="kpi-value">CHF {mc['percentile_95']:,.0f}</div>
                 <div class="kpi-label">Optimiste (95%)</div>
             </div>
@@ -304,7 +296,6 @@ with tab3:
         st.markdown(
             f"""
             <div class="kpi-card">
-                <div class="kpi-emoji">⚠️</div>
                 <div class="kpi-value" style="background: {prob_color}; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{mc['probabilite_perte']:.1f}%</div>
                 <div class="kpi-label">Probabilité de perte</div>
             </div>
@@ -373,9 +364,9 @@ with tab3:
     )
     st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
 
-# ═══ Tab 4 : Coût d'opportunité ═════════════════════════════
+# Tab 4 : Coût d'opportunité 
 with tab4:
-    st.markdown("### 💸 Coût d'opportunité")
+    st.markdown("### Coût d'opportunité")
     st.markdown(
         """
         <div class="section-card">
@@ -402,7 +393,6 @@ with tab4:
         st.markdown(
             f"""
             <div class="kpi-card">
-                <div class="kpi-emoji">💸</div>
                 <div class="kpi-value">CHF {opp['total_depense']:,.0f}</div>
                 <div class="kpi-label">Total dépensé sur {annees_opp} ans</div>
             </div>
@@ -413,7 +403,6 @@ with tab4:
         st.markdown(
             f"""
             <div class="kpi-card">
-                <div class="kpi-emoji">📈</div>
                 <div class="kpi-value" style="background: #FF6B6B; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">CHF {opp['valeur_si_investi']:,.0f}</div>
                 <div class="kpi-label">Valeur si investi</div>
             </div>
@@ -424,7 +413,6 @@ with tab4:
         st.markdown(
             f"""
             <div class="kpi-card">
-                <div class="kpi-emoji">✖️</div>
                 <div class="kpi-value">{opp['facteur_multiplicateur']:.1f}x</div>
                 <div class="kpi-label">Facteur multiplicateur</div>
             </div>
@@ -435,25 +423,25 @@ with tab4:
     st.markdown("<br>", unsafe_allow_html=True)
 
     # Exemples concrets
-    st.markdown("#### 🔍 Exemples de dépenses courantes")
+    st.markdown("#### Exemples de dépenses courantes")
 
     exemples = [
-        ("☕", "Café quotidien (Starbucks)", 5 * 22),
-        ("🍽️", "Lunch au restaurant", 15 * 22),
-        ("📱", "Abonnement streaming", 40),
-        ("🚬", "Paquet de cigarettes / jour", 9 * 30),
-        ("🚗", "Leasing vs occasion", 300),
-        ("👔", "Shopping mode", 200),
+        ("", "Café quotidien (Starbucks)", 5 * 22),
+        ("", "Lunch au restaurant", 15 * 22),
+        ("", "Abonnement streaming", 40),
+        ("", "Paquet de cigarettes / jour", 9 * 30),
+        ("", "Leasing vs occasion", 300),
+        ("", "Shopping mode", 200),
     ]
 
     cols = st.columns(3)
-    for i, (emoji, label, montant) in enumerate(exemples):
+    for i, (_, label, montant) in enumerate(exemples):
         with cols[i % 3]:
             opp_ex = cout_opportunite(montant, taux_opp, annees_opp)
             st.markdown(
                 f"""
                 <div class="section-card">
-                    <b>{emoji} {label}</b><br>
+                    <b>{label}</b><br>
                     <span style="color: #A0A3B1;">CHF {montant:,.0f}/mois</span><br><br>
                     <span style="font-size: 0.85rem;">En {annees_opp} ans :</span><br>
                     <span style="color: #FF6B6B; font-weight: 700;">Dépensé : CHF {opp_ex['total_depense']:,.0f}</span><br>
@@ -464,7 +452,7 @@ with tab4:
                 unsafe_allow_html=True,
             )
 
-# ─── Sauvegarde ──────────────────────────────────────────────
+# Sauvegarde 
 inv_params = {
     "capital_initial": capital_initial, "versement_mensuel": versement_mensuel,
     "taux_annuel": taux_annuel, "annees": annees,
@@ -476,12 +464,12 @@ inv_results = {
 
 simulation_save_section("investissements", inv_params, inv_results)
 
-# ─── Footer ──────────────────────────────────────────────────
+# Footer 
 st.markdown(
     """
     <div class="footer-text">
         Finance Advisor · Module Investissements · Suisse Romande<br>
-        ⚠️ Les performances passées ne sont pas indicatives des performances futures
+        Les performances passées ne sont pas indicatives des performances futures
     </div>
     """,
     unsafe_allow_html=True,

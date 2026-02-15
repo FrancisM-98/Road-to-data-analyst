@@ -5,7 +5,6 @@ Permet au conseiller de charger rapidement un profil type en rendez-vous.
 
 CASE_TEMPLATES = {
     "jeune_diplome": {
-        "emoji": "🎓",
         "titre": "Jeune diplômé",
         "description": "25 ans, premier emploi, célibataire, débute sa vie financière",
         "profil": {
@@ -37,7 +36,6 @@ CASE_TEMPLATES = {
         ],
     },
     "famille_classe_moyenne": {
-        "emoji": "👨‍👩‍👧‍👦",
         "titre": "Famille classe moyenne",
         "description": "38 ans, marié, 2 enfants, propriétaire aspirant",
         "profil": {
@@ -70,7 +68,6 @@ CASE_TEMPLATES = {
         ],
     },
     "cadre_superieur": {
-        "emoji": "💼",
         "titre": "Cadre supérieur",
         "description": "45 ans, haut revenu, marié, 1 enfant, patrimoine à structurer",
         "profil": {
@@ -104,7 +101,6 @@ CASE_TEMPLATES = {
         ],
     },
     "proche_retraite": {
-        "emoji": "🏖️",
         "titre": "Proche retraite",
         "description": "58 ans, marié, planification de la transition vers la retraite",
         "profil": {
@@ -138,7 +134,6 @@ CASE_TEMPLATES = {
         ],
     },
     "independant": {
-        "emoji": "🏗️",
         "titre": "Indépendant",
         "description": "35 ans, travailleur indépendant, prévoyance à construire",
         "profil": {
@@ -191,7 +186,6 @@ def get_templates_summary() -> list[dict]:
         profil = template["profil"]
         summaries.append({
             "key": key,
-            "emoji": template["emoji"],
             "titre": template["titre"],
             "description": template["description"],
             "age": profil["age"],
