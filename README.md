@@ -8,9 +8,9 @@ Currently seeking opportunities in Geneva.
 
 ---
 
-## 📊 Featured Projects
+## Featured Projects
 
-### 🏦 [Bank Customer Churn Analysis](https://github.com/FrancisM-98/Bank-Customer-Churn-Analysis/tree/543c0732937db693fa30a82b032ec4bd7252b466)
+### [Bank Customer Churn Analysis](https://github.com/FrancisM-98/Bank-Customer-Churn-Analysis/tree/543c0732937db693fa30a82b032ec4bd7252b466)
 **Identified $32.65M in at-risk assets** using custom risk scoring model.
 
 - Built predictive framework with **87.08% precision** for high-risk customers
@@ -20,11 +20,11 @@ Currently seeking opportunities in Geneva.
 **Tech Stack:** Python (pandas, scipy), Power BI, Statistical Testing  
 **Key Skills:** Feature engineering, hypothesis testing, business storytelling
 
-[📂 View Project →](https://github.com/FrancisM-98/Bank-Customer-Churn-Analysis/tree/543c0732937db693fa30a82b032ec4bd7252b466)
+[View Project →](https://github.com/FrancisM-98/Bank-Customer-Churn-Analysis/tree/543c0732937db693fa30a82b032ec4bd7252b466)
 
 ---
 
-## 🛠️ Technical Skills
+## Technical Skills
 
 **Languages & Tools:**
 - **Python:** pandas, numpy, matplotlib, seaborn, scipy
@@ -41,7 +41,7 @@ Currently seeking opportunities in Geneva.
 
 ---
 
-## 🎓 Background
+## Background
 
 Transitioning into data analytics through **Digitalizers Geneva** (career development program).  
 **Focus:** Combining technical skills with business acumen to drive data-informed decisions.
@@ -51,7 +51,7 @@ Transitioning into data analytics through **Digitalizers Geneva** (career develo
 
 ---
 
-## 📬 Get in Touch
+## Get in Touch
 
 I'm actively seeking **Junior Data Analyst** positions in:
 - Banking & Fintech
@@ -60,10 +60,10 @@ I'm actively seeking **Junior Data Analyst** positions in:
 - Tech Startups
 
 **Contact:**
-- 📧 Email: multanifrancis@gmail.com
-- 💼 LinkedIn: [francis-multani](https://www.linkedin.com/in/francis-multani/)
-- 📂 GitHub: You're already here!
+- Email: multanifrancis@gmail.com
+- LinkedIn: [francis-multani](https://www.linkedin.com/in/francis-multani/)
+- GitHub: You're already here!
 
 ---
 
-*Portfolio last updated: March 2025*
+*Portfolio last updated: February 2026*
